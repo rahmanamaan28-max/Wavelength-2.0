@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wavelength - Single Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Home Screen -->
+        <div class="screen active" id="home-screen">
+            <header>
+                <h1><i class="fas fa-wave-square"></i> WAVELENGTH</h1>
+                <p class="subtitle">A telepathic party game where you give clues between two extremes</p>
+            </header>
+            
+            <div class="panel">
+                <h2>Single Player Mode</h2>
+                <p>Play against 3 AI bots in this single-player version of Wavelength.</p>
+                
+                <div class="form-group">
+                    <label for="player-name">Your Name:</label>
+                    <input type="text" id="player-name" placeholder="Enter your name" value="Player">
+                </div>
+                
+                <div class="form-group">
+                    <label for="rounds">Number of Rounds:</label>
+                    <select id="rounds">
+                        <option value="3">3 Rounds</option>
+                        <option value="5" selected>5 Rounds</option>
+                        <option value="7">7 Rounds</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="difficulty">Bot Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                
+                <button id="start-game" class="btn btn-start">Start Game</button>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div class="screen" id="game-screen">
+            <header>
+                <h1><i class="fas fa-wave-square"></i> WAVELENGTH</h1>
+                <div class="game-info">
+                    <div class="info-item">Round <span id="current-round">1</span>/<span id="total-rounds">5</span></div>
+                    <div class="info-item">Timer: <span id="timer">01:30</span></div>
+                    <div class="info-item">Score: <span id="player-score">0</span></div>
+                </div>
+            </header>
+            
+            <div class="game-container">
+                <!-- Left Panel - Players -->
+                <div class="panel">
+                    <h2>Players</h2>
+                    <div class="player-list">
+                        <div class="player-card" id="player-card">
+                            <div class="player-icon"><i class="fas fa-user"></i></div>
+                            <div class="player-name">Player</div>
+                            <div class="player-score">0</div>
+                        </div>
+                        <div class="player-card bot">
+                            <div class="player-icon"><i class="fas fa-robot"></i></div>
+                            <div class="player-name">Bot 1</div>
+                            <div class="player-score">0</div>
+                        </div>
+                        <div class="player-card bot">
+                            <div class="player-icon"><i class="fas fa-robot"></i></div>
+                            <div class="player-name">Bot 2</div>
+                            <div class="player-score">0</div>
+                        </div>
+                        <div class="player-card bot">
+                            <div class="player-icon"><i class="fas fa-robot"></i></div>
+                            <div class="player-name">Bot 3</div>
+                            <div class="player-score">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bot-thinking" id="bot-thinking">
+                        <i class="fas fa-comment-dots"></i> <span id="bot-message">Bots are thinking...</span>
+                    </div>
+                </div>
+                
+                <!-- Center Panel - Game Area -->
+                <div class="panel game-area">
+                    <!-- Psychic view -->
+                    <div class="psychic-view active" id="psychic-view">
+                        <h2>You are the Psychic!</h2>
+                        <div class="spectrum-card">
+                            <div class="spectrum-range">
+                                <span id="spectrum-left">Hot</span>
+                                <span id="spectrum-right">Cold</span>
+                            </div>
+                            <div class="spectrum-name" id="spectrum-name">Temperature Spectrum</div>
+                        </div>
+                        <div class="target-display">
+                            <div class="target-label">Target Zone:</div>
+                            <div class="spectrum-container">
+                                <div class="target-zone" id="target-zone" style="left: 30%; width: 20%;"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="clue-input">Your Clue:</label>
+                            <input type="text" id="clue-input" placeholder="Enter your clue">
+                        </div>
+                        <button id="submit-clue" class="btn">Submit Clue</button>
+                    </div>
+                    
+                    <!-- Guesser view -->
+                    <div class="guesser-view" id="guesser-view">
+                        <div class="clue-display">
+                            <div class="clue-text" id="clue-display">Waiting for clue...</div>
+                        </div>
+                        
+                        <div class="spectrum-card">
+                            <div class="spectrum-range">
+                                <span id="guesser-left">Hot</span>
+                                <span id="guesser-right">Cold</span>
+                            </div>
+                            <div class="spectrum-name">Temperature Spectrum</div>
+                        </div>
+                        
+                        <div class="dial-container">
+                            <div class="dial" id="dial">
+                                <div class="dial-pointer"></div>
+                            </div>
+                        </div>
+                        
+                        <button id="submit-guess" class="btn">Submit Guess</button>
+                    </div>
+                </div>
+                
+                <!-- Right Panel - Controls -->
+                <div class="panel controls-panel">
+                    <div class="control-section">
+                        <h2><i class="fas fa-info-circle"></i> Game Status</h2>
+                        <div class="game-status" id="game-status">
+                            You are the Psychic! Give a clue to the other players.
+                        </div>
+                    </div>
+                    
+                    <div class="control-section">
+                        <h2><i class="fas fa-history"></i> Round History</h2>
+                        <div id="round-history">
+                            <!-- History items will be added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div class="screen" id="results-screen">
+            <header>
+                <h1><i class="fas fa-wave-square"></i> ROUND RESULTS</h1>
+            </header>
+            
+            <div class="panel">
+                <h2>Target: <span id="target-range">30-50%</span></h2>
+                <div class="results-container">
+                    <div class="spectrum-container" id="results-spectrum">
+                        <div class="target-zone" id="results-target-zone" style="left: 30%; width: 20%;"></div>
+                        <!-- Guess markers will be added here -->
+                    </div>
+                </div>
+                
+                <div class="results-list" id="results-list">
+                    <!-- Results will be shown here -->
+                </div>
+                
+                <button id="next-round" class="btn btn-start">Next Round</button>
+            </div>
+        </div>
+        
+        <!-- Game Over Screen -->
+        <div class="screen" id="gameover-screen">
+            <header>
+                <h1><i class="fas fa-wave-square"></i> GAME OVER</h1>
+            </header>
+            
+            <div class="panel">
+                <h2>Final Scores</h2>
+                <div class="final-scores">
+                    <div class="player-card">
+                        <div class="player-icon"><i class="fas fa-user"></i></div>
+                        <div class="player-name">Player</div>
+                        <div class="player-score">15</div>
+                    </div>
+                    <div class="player-card bot">
+                        <div class="player-icon"><i class="fas fa-robot"></i></div>
+                        <div class="player-name">Bot 1</div>
+                        <div class="player-score">12</div>
+                    </div>
+                    <div class="player-card bot">
+                        <div class="player-icon"><i class="fas fa-robot"></i></div>
+                        <div class="player-name">Bot 2</div>
+                        <div class="player-score">10</div>
+                    </div>
+                    <div class="player-card bot">
+                        <div class="player-icon"><i class="fas fa-robot"></i></div>
+                        <div class="player-name">Bot 3</div>
+                        <div class="player-score">8</div>
+                    </div>
+                </div>
+                
+                <div class="winner-announcement">
+                    <h2>Winner: <span id="winner-name">Player</span></h2>
+                    <div class="trophy"><i class="fas fa-trophy"></i></div>
+                </div>
+                
+                <button id="play-again" class="btn btn-start">Play Again</button>
+                <button id="back-to-home" class="btn">Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
